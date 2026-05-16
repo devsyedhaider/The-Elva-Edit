@@ -1,6 +1,6 @@
 import { StateStorage } from 'zustand/middleware';
 
-const DB_NAME = 'shoes-store-db';
+const DB_NAME = 'elva-edit-db';
 const STORE_NAME = 'zustand-store';
 
 const getDB = (): Promise<IDBDatabase> => {
