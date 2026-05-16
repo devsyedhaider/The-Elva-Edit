@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
   
   // This is a simple mock authentication check
-  // In a real app, you would verify a JWT or session cookie
   const isAuthenticated = request.cookies.get('auth_logged_in');
   const isAdmin = request.cookies.get('admin_mode');
 
@@ -18,9 +17,16 @@ export function middleware(request: NextRequest) {
     }
   }
 
+  // Redirect admins from root to dashboard by default
+  if (path === '/') {
+    if (isAdmin) {
+      return NextResponse.redirect(new URL('/admin', request.url));
+    }
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/checkout/:path*'],
+  matcher: ['/', '/admin/:path*', '/checkout/:path*'],
 };

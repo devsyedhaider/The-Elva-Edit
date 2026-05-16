@@ -15,17 +15,19 @@ interface HeroContent {
 interface HeroStore {
   hero: HeroContent;
   isLoading: boolean;
+  _hasHydrated: boolean;
+  setHasHydrated: (state: boolean) => void;
   fetchHero: () => Promise<void>;
   updateHero: (content: Partial<HeroContent>) => Promise<void>;
 }
 
 const defaultHero: HeroContent = {
-  seasonText: 'New Season 2026',
-  accentTitle: 'YOUR EDGE.',
-  title: 'UNLEASH',
-  subtitle: 'Experience the fusion of high-performance technology and street-ready aesthetics. Engineered for those who lead, never follow.',
-  backgroundImage: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=100&w=2560&auto=format&fit=crop',
-  buttonText: 'EXPLORE NOW',
+  seasonText: 'New Arrivals 2026',
+  accentTitle: 'REDEFINED.',
+  title: 'ELEGANCE',
+  subtitle: 'Handcrafted jewelry from Pakistan — where timeless artistry meets modern luxury. Discover exclusive collections designed for elegance.',
+  backgroundImage: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=100&w=2560&auto=format&fit=crop',
+  buttonText: 'SHOP COLLECTION',
 };
 
 export const useHeroStore = create<HeroStore>()(
@@ -33,6 +35,8 @@ export const useHeroStore = create<HeroStore>()(
     (set) => ({
       hero: defaultHero,
       isLoading: false,
+      _hasHydrated: false,
+      setHasHydrated: (state) => set({ _hasHydrated: state }),
 
       fetchHero: async () => {
         if (!supabase) return;
@@ -89,8 +93,11 @@ export const useHeroStore = create<HeroStore>()(
     }),
     {
       name: 'hero-storage',
-      version: 3, // Bump version to make sure we have everything fresh after some changes
+      version: 4, // Bump version to force refresh
       storage: createJSONStorage(() => indexedDBStorage),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

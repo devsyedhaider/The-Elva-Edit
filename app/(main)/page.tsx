@@ -17,12 +17,12 @@ export default function Home() {
   const categories = useCategoryStore((state) => state.categories);
   const hero = useHeroStore((state) => state.hero);
   const promo = usePromoStore((state) => state.promo);
+
   const [mounted, setMounted] = useState(false);
+  const [showPromoModal, setShowPromoModal] = useState(false);
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [sliderWidth, setSliderWidth] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
-
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const [showPromoModal, setShowPromoModal] = useState(false);
 
   const handleClaimDiscount = () => {
     if (promo.code) {
